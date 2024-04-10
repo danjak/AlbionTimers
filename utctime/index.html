@@ -26,10 +26,7 @@
                     </figcaption>
                 </figure>
 
-                <h2 class="display-4">Castles open</h2>
-                <ul id="castles-local" class="list-group">
 
-                </ul>
 
             </div>
             <div class="col">
@@ -42,15 +39,24 @@
                         <span id="utc-date"></span>
                     </figcaption>
                 </figure>
-
-                <h2 class="display-4">Castles open</h2>
-                <ul id="castles-utc" class="list-group">
-
-                </ul>
             </div>
 
-
-
+        </div>
+        <div class="row">
+            <div class="col">
+                <h2 class="display-4">Castles/outposts pop</h2>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Local</th>
+                            <th scope="col">UTC</th>
+                            <th scope="col">Open</th>
+                        </tr>
+                    </thead>
+                    <tbody id="utc-castle-time">
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
@@ -69,73 +75,109 @@
             '22:30'
         ];
 
-        function utcCastles(id, now) {
-            // const now = new Date();
-
-            const countdownList = document.getElementById(id);
-            // const countdownListLocal = document.getElementById('castles-local');
-            countdownList.innerHTML = ''; // Clear previous entries
-
-            castleTimers.forEach(time => {
-                const [hours, minutes] = time.split(':');
-                const targetDate = new Date(now);
-                targetDate.setUTCHours(Number(hours), Number(minutes), 0, 0);
-                if (targetDate < now) {
-                    targetDate.setDate(targetDate.getDate() + 1);
-                }
-                const distance = targetDate - now;
-                const seconds = Math.floor(distance / 1000) % 60;
-                const minutesRemaining = Math.floor(distance / (1000 * 60)) % 60;
-                const hoursRemaining = Math.floor(distance / (1000 * 60 * 60));
-
-                const listItem = document.createElement('li');
-                listItem.textContent = `${time} UTC: ${hoursRemaining}h ${minutesRemaining}m ${seconds}s`;
-                listItem.className = 'list-group-item';
-                countdownList.appendChild(listItem);
-            });
-        }
-
-        function localCastles(id, now) {
-            // const now = new Date();
-
-            const countdownList = document.getElementById(id);
-            countdownList.innerHTML = ''; // Clear previous entries
-
-            castleTimers.forEach(time => {
-                const [hours, minutes] = time.split(':');
-                const targetDate = new Date(now);
-                targetDate.setUTCHours(Number(hours), Number(minutes), 0, 0);
-                if (targetDate < now) {
-                    targetDate.setDate(targetDate.getDate() + 1);
-                }
-                const distance = targetDate - now;
-                const seconds = Math.floor(distance / 1000) % 60;
-                const minutesRemaining = Math.floor(distance / (1000 * 60)) % 60;
-                const hoursRemaining = Math.floor(distance / (1000 * 60 * 60));
-
-                const listItem = document.createElement('li');
-                listItem.textContent = `${padZeroes(targetDate.getHours())}:${padZeroes(targetDate.getMinutes())} local: ${hoursRemaining}h ${minutesRemaining}m ${seconds}s`;
-                listItem.className = 'list-group-item';
-                countdownList.appendChild(listItem);
-            });
-        }
-
         function padZeroes(timeInt) {
             return String(timeInt).padStart(2, '0');
         }
+        function addUtcCastles() {
+            const utcTimersList = document.getElementById('utc-castle-time');
+            utcTimersList.innerHTML = '';
+            castleTimers.forEach(time => {
+                const row = document.createElement('tr');
+                const utcTime = document.createElement('td');
+                utcTime.textContent = time;
+                row.appendChild(utcTime);
+
+                const localTime = document.createElement('td');
+                const [hours, minutes] = time.split(':');
+                const localDate = new Date();
+                localDate.setUTCHours(Number(hours), Number(minutes), 0, 0);
+                localTime.textContent = `${padZeroes(localDate.getHours())}:${padZeroes(localDate.getMinutes())}`;
+                row.appendChild(localTime);
+
+                const timer = document.createElement('td');
+
+                var now = new Date();
+                if (localDate < now) {
+                    localDate.setDate(localDate.getDate() + 1);
+                }
+                const distance = localDate - now;
+                const seconds = Math.floor(distance / 1000) % 60;
+                const minutesRemaining = Math.floor(distance / (1000 * 60)) % 60;
+                const hoursRemaining = Math.floor(distance / (1000 * 60 * 60));
+
+                // const listItem = document.createElement('li');
+                timer.textContent = `${hoursRemaining}h ${minutesRemaining}m ${seconds}s`;
+                row.appendChild(timer);
+                utcTimersList.appendChild(row);
+            });
+        }
+
+        // function utcCastles(id, now) {
+        //     // const now = new Date();
+
+        //     const countdownList = document.getElementById(id);
+        //     // const countdownListLocal = document.getElementById('castles-local');
+        //     countdownList.innerHTML = ''; // Clear previous entries
+
+        //     castleTimers.forEach(time => {
+        //         const [hours, minutes] = time.split(':');
+        //         const targetDate = new Date(now);
+        //         targetDate.setUTCHours(Number(hours), Number(minutes), 0, 0);
+        //         if (targetDate < now) {
+        //             targetDate.setDate(targetDate.getDate() + 1);
+        //         }
+        //         const distance = targetDate - now;
+        //         const seconds = Math.floor(distance / 1000) % 60;
+        //         const minutesRemaining = Math.floor(distance / (1000 * 60)) % 60;
+        //         const hoursRemaining = Math.floor(distance / (1000 * 60 * 60));
+
+        //         const listItem = document.createElement('li');
+        //         listItem.textContent = `${time} UTC: ${hoursRemaining}h ${minutesRemaining}m ${seconds}s`;
+        //         listItem.className = 'list-group-item';
+        //         countdownList.appendChild(listItem);
+        //     });
+        // }
+
+        // function localCastles(id, now) {
+        //     // const now = new Date();
+
+        //     const countdownList = document.getElementById(id);
+        //     countdownList.innerHTML = ''; // Clear previous entries
+
+        //     castleTimers.forEach(time => {
+        //         const [hours, minutes] = time.split(':');
+        //         const targetDate = new Date(now);
+        //         targetDate.setUTCHours(Number(hours), Number(minutes), 0, 0);
+        //         if (targetDate < now) {
+        //             targetDate.setDate(targetDate.getDate() + 1);
+        //         }
+        //         const distance = targetDate - now;
+        //         const seconds = Math.floor(distance / 1000) % 60;
+        //         const minutesRemaining = Math.floor(distance / (1000 * 60)) % 60;
+        //         const hoursRemaining = Math.floor(distance / (1000 * 60 * 60));
+
+        //         const listItem = document.createElement('li');
+        //         listItem.textContent = `${padZeroes(targetDate.getHours())}:${padZeroes(targetDate.getMinutes())} local: ${hoursRemaining}h ${minutesRemaining}m ${seconds}s`;
+        //         listItem.className = 'list-group-item';
+        //         countdownList.appendChild(listItem);
+        //     });
+        // }
+
 
 
         function updateTime() {
+
             document.getElementById("local-time").textContent = moment().format('H:mm:ss');
             document.getElementById("utc-time").textContent = moment.utc().format('H:mm:ss');
             document.getElementById("local-date").textContent = moment().format('MMMM Do YYYY');
             document.getElementById("utc-date").textContent = moment.utc().format('MMMM Do YYYY');
-            localCastles('castles-local', new Date());
-            var date = new Date();
-            utcCastles('castles-utc', new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(),
-                date.getUTCDate(), date.getUTCHours(),
-                date.getUTCMinutes(), date.getUTCSeconds())));
+            //     localCastles('castles-local', new Date());
+            //     var date = new Date();
+            //     utcCastles('castles-utc', new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(),
+            //         date.getUTCDate(), date.getUTCHours(),
+            //         date.getUTCMinutes(), date.getUTCSeconds())));
 
+            addUtcCastles();
         }
 
         // Update the time every second
