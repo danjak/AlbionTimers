@@ -25,7 +25,12 @@
                         <span id="local-date"></span>
                     </figcaption>
                 </figure>
-                
+
+                <h2 class="display-4">Castles open</h2>
+                <ul id="castles-local" class="list-group">
+
+                </ul>
+
             </div>
             <div class="col">
                 <h1 class="display-3">UTC Time</h1>
@@ -37,10 +42,15 @@
                         <span id="utc-date"></span>
                     </figcaption>
                 </figure>
+
+                <h2 class="display-4">Castles open</h2>
+                <ul id="castles-utc" class="list-group">
+
+                </ul>
             </div>
 
 
-            
+
         </div>
     </div>
 
@@ -49,11 +59,83 @@
 
 
     <script>
+        const castleTimers = [
+            '01:30',
+            '04:30',
+            '07:30',
+            '13:30',
+            '16:30',
+            '19:30',
+            '22:30'
+        ];
+
+        function utcCastles(id, now) {
+            // const now = new Date();
+
+            const countdownList = document.getElementById(id);
+            // const countdownListLocal = document.getElementById('castles-local');
+            countdownList.innerHTML = ''; // Clear previous entries
+
+            castleTimers.forEach(time => {
+                const [hours, minutes] = time.split(':');
+                const targetDate = new Date(now);
+                targetDate.setUTCHours(Number(hours), Number(minutes), 0, 0);
+                if (targetDate < now) {
+                    targetDate.setDate(targetDate.getDate() + 1);
+                }
+                const distance = targetDate - now;
+                const seconds = Math.floor(distance / 1000) % 60;
+                const minutesRemaining = Math.floor(distance / (1000 * 60)) % 60;
+                const hoursRemaining = Math.floor(distance / (1000 * 60 * 60));
+
+                const listItem = document.createElement('li');
+                listItem.textContent = `${time} UTC: ${hoursRemaining}h ${minutesRemaining}m ${seconds}s`;
+                listItem.className = 'list-group-item';
+                countdownList.appendChild(listItem);
+            });
+        }
+
+        function localCastles(id, now) {
+            // const now = new Date();
+
+            const countdownList = document.getElementById(id);
+            countdownList.innerHTML = ''; // Clear previous entries
+
+            castleTimers.forEach(time => {
+                const [hours, minutes] = time.split(':');
+                const targetDate = new Date(now);
+                targetDate.setUTCHours(Number(hours), Number(minutes), 0, 0);
+                if (targetDate < now) {
+                    targetDate.setDate(targetDate.getDate() + 1);
+                }
+                const distance = targetDate - now;
+                const seconds = Math.floor(distance / 1000) % 60;
+                const minutesRemaining = Math.floor(distance / (1000 * 60)) % 60;
+                const hoursRemaining = Math.floor(distance / (1000 * 60 * 60));
+
+                const listItem = document.createElement('li');
+                listItem.textContent = `${padZeroes(targetDate.getHours())}:${padZeroes(targetDate.getMinutes())} local: ${hoursRemaining}h ${minutesRemaining}m ${seconds}s`;
+                listItem.className = 'list-group-item';
+                countdownList.appendChild(listItem);
+            });
+        }
+
+        function padZeroes(timeInt) {
+            return String(timeInt).padStart(2, '0');
+        }
+
+
         function updateTime() {
             document.getElementById("local-time").textContent = moment().format('H:mm:ss');
             document.getElementById("utc-time").textContent = moment.utc().format('H:mm:ss');
             document.getElementById("local-date").textContent = moment().format('MMMM Do YYYY');
             document.getElementById("utc-date").textContent = moment.utc().format('MMMM Do YYYY');
+            localCastles('castles-local', new Date());
+            var date = new Date();
+            utcCastles('castles-utc', new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(),
+                date.getUTCDate(), date.getUTCHours(),
+                date.getUTCMinutes(), date.getUTCSeconds())));
+
         }
 
         // Update the time every second
