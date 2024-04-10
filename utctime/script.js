@@ -15,11 +15,10 @@ function addUtcCastles() {
     const utcTimersList = document.getElementById('utc-castle-time');
     utcTimersList.innerHTML = '';
     castleTimers.forEach(time => {
-        const row = document.createElement('tr');
-        const utcTime = document.createElement('td');
-        utcTime.textContent = time;
-        row.appendChild(utcTime);
 
+        const row = document.createElement('tr');
+        
+        // LOCAL
         const localTime = document.createElement('td');
         const [hours, minutes] = time.split(':');
         const localDate = new Date();
@@ -27,6 +26,14 @@ function addUtcCastles() {
         localTime.textContent = `${padZeroes(localDate.getHours())}:${padZeroes(localDate.getMinutes())}`;
         row.appendChild(localTime);
 
+        // UTC
+        const utcTime = document.createElement('td');
+        utcTime.textContent = time;
+        row.appendChild(utcTime);
+
+
+
+        // TIMER
         const timer = document.createElement('td');
 
         var now = new Date();
