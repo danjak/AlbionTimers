@@ -106,8 +106,17 @@
                 const hoursRemaining = Math.floor(distance / (1000 * 60 * 60));
 
                 // const listItem = document.createElement('li');
-                timer.textContent = `${hoursRemaining}h ${minutesRemaining}m ${seconds}s`;
+                timer.textContent = `${padZeroes(hoursRemaining)}h ${padZeroes(minutesRemaining)}m ${padZeroes(seconds)}s`;
                 row.appendChild(timer);
+                if (hoursRemaining === 2) {
+                    row.className = "table-secondary";
+                }
+                if (hoursRemaining === 1) {
+                    row.className = "table-info";
+                }
+                if (hoursRemaining === 0) {
+                    row.className = "table-success";
+                }
                 utcTimersList.appendChild(row);
             });
         }
