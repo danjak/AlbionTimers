@@ -1,12 +1,13 @@
 if (localStorage.getItem('darkmode') === 'true') {
-    document.documentElement.setAttribute('data-bs-theme', 'dark')
+    document.documentElement.setAttribute('data-bs-theme', 'dark');
+    document.getElementById('darkmodeswitch').textContent = "Light mode";
 }
 
 document.getElementById('darkmodeswitch').addEventListener('click', () => {
     if (document.documentElement.getAttribute('data-bs-theme') == 'dark') {
-
         localStorage.removeItem('darkmode');
         document.documentElement.setAttribute('data-bs-theme', 'light')
+        document.getElementById('darkmodeswitch').textContent = "Dark mode";
     }
     else {
         localStorage.setItem('darkmode', 'true');
