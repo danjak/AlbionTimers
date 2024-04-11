@@ -33,9 +33,12 @@ function addUtcCastles() {
 
     const endTime = new Date();
     endTime.setUTCHours(10, 30, 0, 0);
+
+    let set = false;
     castleTimers.forEach(time => {
-
-
+        if (set) {
+            return;
+        }
         // LOCAL
         const localTime = document.createElement('td');
         const [hours, minutes] = time.split(':');
@@ -58,8 +61,10 @@ function addUtcCastles() {
         if (now >= startTime && now <= endTime && time === '13:30') {
             document.getElementById('nextcastle').innerHTML = `${padZeroes(hoursRemaining)}h ${padZeroes(minutesRemaining)}m ${padZeroes(seconds)}s`;
         }
-        if (hoursRemaining <= 2) {
+        if (hoursRemaining <= 3) {
             document.getElementById('nextcastle').innerHTML = `${padZeroes(hoursRemaining)}h ${padZeroes(minutesRemaining)}m ${padZeroes(seconds)}s`;
+            set = true;
+            return;
         }
 
     });
