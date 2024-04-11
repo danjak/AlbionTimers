@@ -16,11 +16,19 @@ document.getElementById('darkmodeswitch').addEventListener('click', () => {
 
 const castleTimers = [
     '01:30',
+    '00:00',
+    '03:00',
     '04:30',
+    '05:00',
     '07:30',
+    '10:00',
+    '12:00',
     '13:30',
+    '15:00',
     '16:30',
+    '18:00',
     '19:30',
+    '21:00',
     '22:30'
 ];
 
@@ -29,15 +37,35 @@ function padZeroes(timeInt) {
 }
 function addUtcCastles() {
     const utcTimersList = document.getElementById('utc-castle-time');
+    utcTimersList.innerHTML = '';
     castleTimers.forEach(time => {
+        const [hours, minutes] = time.split(':');
 
+        const row = document.createElement('tr');
+        const type = document.createElement('td');
+        if (hours === '10') {
+            type.textContent = "Downtime";
+        }
+        else if (minutes === '30') {
+            type.textContent = "Castle";
+        } else {
+            type.textContent = 'Territory'
+        }
+        row.appendChild(type);
 
         // LOCAL
         const localTime = document.createElement('td');
-        const [hours, minutes] = time.split(':');
         const localDate = new Date();
         localDate.setUTCHours(Number(hours), Number(minutes), 0, 0);
         localTime.textContent = `${padZeroes(localDate.getHours())}:${padZeroes(localDate.getMinutes())}`;
+        row.appendChild(localTime);
+
+        // UTC
+        const utcTime = document.createElement('td');
+        utcTime.textContent = time;
+        row.appendChild(utcTime);
+
+
 
         // TIMER
         const timer = document.createElement('td');
@@ -51,24 +79,29 @@ function addUtcCastles() {
         const minutesRemaining = Math.floor(distance / (1000 * 60)) % 60;
         const hoursRemaining = Math.floor(distance / (1000 * 60 * 60));
 
-        const startTime = new Date();
-        startTime.setUTCHours(7, 30, 0, 0);
-        
-        const endTime = new Date();
-        endTime.setUTCHours(10, 30, 0, 0);
-        
-        // Check if the current time is within the specified range
-        if (now >= startTime && now <= endTime && time === '13:30') {
-            document.getElementById('nextcastle').innerHTML = `${padZeroes(hoursRemaining)}h ${padZeroes(minutesRemaining)}m ${padZeroes(seconds)}s`;
+        // const listItem = document.createElement('li');
+        timer.textContent = `${padZeroes(hoursRemaining)}h ${padZeroes(minutesRemaining)}m ${padZeroes(seconds)}s`;
+        row.appendChild(timer);
+        if (hoursRemaining === 2) {
+            row.className = "table-secondary";
         }
-        if (hoursRemaining <= 3) {
-            document.getElementById('nextcastle').innerHTML = `${padZeroes(hoursRemaining)}h ${padZeroes(minutesRemaining)}m ${padZeroes(seconds)}s`;
+        if (hoursRemaining === 1) {
+            row.className = "table-info";
         }
-
+        if (hoursRemaining === 0) {
+            row.className = "table-success";
+        }
+        utcTimersList.appendChild(row);
     });
 }
 
 function updateTime() {
+
+    document.getElementById("local-time").textContent = moment().format('H:mm:ss');
+    document.getElementById("utc-time").textContent = moment.utc().format('H:mm:ss');
+    document.getElementById("local-date").textContent = moment().format('MMMM Do YYYY');
+    document.getElementById("utc-date").textContent = moment.utc().format('MMMM Do YYYY');
+
     addUtcCastles();
 }
 
