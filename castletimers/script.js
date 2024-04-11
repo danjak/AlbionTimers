@@ -12,6 +12,7 @@ document.getElementById('darkmodeswitch').addEventListener('click', () => {
     else {
         localStorage.setItem('darkmode', 'true');
         document.documentElement.setAttribute('data-bs-theme', 'dark')
+        document.getElementById('darkmodeswitch').textContent = "Light mode";
     }
 });
 
