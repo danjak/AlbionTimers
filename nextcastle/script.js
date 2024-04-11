@@ -28,7 +28,11 @@ function padZeroes(timeInt) {
     return String(timeInt).padStart(2, '0');
 }
 function addUtcCastles() {
-    const utcTimersList = document.getElementById('utc-castle-time');
+    const startTime = new Date();
+    startTime.setUTCHours(7, 30, 0, 0);
+
+    const endTime = new Date();
+    endTime.setUTCHours(10, 30, 0, 0);
     castleTimers.forEach(time => {
 
 
@@ -39,9 +43,6 @@ function addUtcCastles() {
         localDate.setUTCHours(Number(hours), Number(minutes), 0, 0);
         localTime.textContent = `${padZeroes(localDate.getHours())}:${padZeroes(localDate.getMinutes())}`;
 
-        // TIMER
-        const timer = document.createElement('td');
-
         var now = new Date();
         if (localDate < now) {
             localDate.setDate(localDate.getDate() + 1);
@@ -51,12 +52,8 @@ function addUtcCastles() {
         const minutesRemaining = Math.floor(distance / (1000 * 60)) % 60;
         const hoursRemaining = Math.floor(distance / (1000 * 60 * 60));
 
-        const startTime = new Date();
-        startTime.setUTCHours(7, 30, 0, 0);
-        
-        const endTime = new Date();
-        endTime.setUTCHours(10, 30, 0, 0);
-        
+
+
         // Check if the current time is within the specified range
         if (now >= startTime && now <= endTime && time === '13:30') {
             document.getElementById('nextcastle').innerHTML = `${padZeroes(hoursRemaining)}h ${padZeroes(minutesRemaining)}m ${padZeroes(seconds)}s`;

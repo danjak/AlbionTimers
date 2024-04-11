@@ -30,6 +30,11 @@ function padZeroes(timeInt) {
 function addUtcCastles() {
     const utcTimersList = document.getElementById('utc-castle-time');
     utcTimersList.innerHTML = '';
+    const startTime = new Date();
+    startTime.setUTCHours(7, 30, 0, 0);
+
+    const endTime = new Date();
+    endTime.setUTCHours(10, 30, 0, 0);
     castleTimers.forEach(time => {
 
         const row = document.createElement('tr');
@@ -67,11 +72,15 @@ function addUtcCastles() {
         if (hoursRemaining === 2) {
             row.className = "table-secondary";
         }
-        if (hoursRemaining === 1) {
+        else if (hoursRemaining === 1) {
             row.className = "table-info";
         }
-        if (hoursRemaining === 0) {
+        else if (hoursRemaining === 0) {
             row.className = "table-success";
+        }
+        else if (now >= startTime && now <= endTime && time === '13:30') {
+            
+            row.className = "table-secondary";
         }
         utcTimersList.appendChild(row);
     });
