@@ -1,3 +1,19 @@
+if (localStorage.getItem('darkmode') === 'true') {
+    document.documentElement.setAttribute('data-bs-theme', 'dark')
+}
+
+document.getElementById('darkmodeswitch').addEventListener('click', () => {
+    if (document.documentElement.getAttribute('data-bs-theme') == 'dark') {
+
+        localStorage.removeItem('darkmode');
+        document.documentElement.setAttribute('data-bs-theme', 'light')
+    }
+    else {
+        localStorage.setItem('darkmode', 'true');
+        document.documentElement.setAttribute('data-bs-theme', 'dark')
+    }
+});
+
 const castleTimers = [
     '01:30',
     '04:30',
@@ -17,7 +33,7 @@ function addUtcCastles() {
     castleTimers.forEach(time => {
 
         const row = document.createElement('tr');
-        
+
         // LOCAL
         const localTime = document.createElement('td');
         const [hours, minutes] = time.split(':');
