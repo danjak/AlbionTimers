@@ -17,8 +17,8 @@ document.getElementById('darkmodeswitch').addEventListener('click', () => {
 });
 
 const castleTimers = [
-    '01:30',
     '00:00',
+    '01:30',
     '03:00',
     '04:30',
     '05:00',
