@@ -58,7 +58,7 @@ function addUtcCastles() {
         if (now >= startTime && now <= endTime && time === '13:30') {
             document.getElementById('nextcastle').innerHTML = `${padZeroes(hoursRemaining)}h ${padZeroes(minutesRemaining)}m ${padZeroes(seconds)}s`;
         }
-        if (hoursRemaining <= 3) {
+        if (hoursRemaining <= 2) {
             document.getElementById('nextcastle').innerHTML = `${padZeroes(hoursRemaining)}h ${padZeroes(minutesRemaining)}m ${padZeroes(seconds)}s`;
         }
 
