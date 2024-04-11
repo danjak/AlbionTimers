@@ -9,27 +9,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Local Time and UTC Time</title>
     <style>
-
         .display-4 {
-    position: absolute;
-    top:  40%;
-    left: 50%;
-    transform: translate(-50%,-50%);
-    white-space:nowrap;
-text-align: center;
-}
-.btn {
-    margin: 5px;
-    margin-top: 10px;
-}
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            white-space: nowrap;
+            text-align: center;
+        }
+
+        .btn {
+            margin: 5px;
+            margin-top: 10px;
+        }
     </style>
 </head>
 
 <body>
     <div class="container">
         <div class="row">
-            <div class="col-8"></div>
-            <div class="col-4">
+            <div class="col">
                 <button type="button" class="btn btn-dark float-end" id="darkmodeswitch">Dark mode</button>
                 <a class="btn btn-dark float-end" href="/castletimers/">All castles</a>
                 <a class="btn btn-dark float-end" href="/alltimers/">All timers</a>
@@ -40,14 +39,14 @@ text-align: center;
                 <h2 class="display-4"> Next chest opens in: <br> <span id="nextcastle"></span></h2>
             </div>
 
-    </div>
+        </div>
 
 
-    <script src="https://cdn.jsdelivr.net/npm/moment@2.30.1/moment.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/moment@2.30.1/moment.min.js"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
-        integrity="sha256-3gQJhtmj7YnV1fmtbVcnAV6eI4ws0Tr48bVZCThtCGQ=" crossorigin="anonymous"></script>
-    <script src="script.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+            integrity="sha256-3gQJhtmj7YnV1fmtbVcnAV6eI4ws0Tr48bVZCThtCGQ=" crossorigin="anonymous"></script>
+        <script src="script.js"></script>
 
 </body>
 
