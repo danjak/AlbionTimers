@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Local Time and UTC Time</title>
     <style>
-        .display-4 {
+        .mid-container {
             position: absolute;
             top: 40%;
             left: 50%;
@@ -37,11 +37,34 @@
             </div>
         </div>
         <div class="row">
-            <div class="col">
+            <div class="col mid-container">
                 <h2 class="display-4"> Next chest opens in: <br> <span id="nextcastle"></span></h2>
+
+                <div class="row">
+                    <div class="col" style="text-align: right;border-right: black 1px solid;">
+                        <h1 class="display-6">Local Time</h1>
+                        <figure>
+                            <blockquote class="blockquote">
+                                <p id="local-time"></p>
+                            </blockquote>
+                        </figure>
+
+                    </div>
+                    <div class="col" style="text-align: left;">
+
+                        <h1 class="display-6">UTC Time</h1>
+                        <figure>
+                            <blockquote class="blockquote">
+                                <p id="utc-time"></p>
+                            </blockquote>
+                        </figure>
+                    </div>
+                </div>
+
             </div>
 
         </div>
+
 
 
         <script src="https://cdn.jsdelivr.net/npm/moment@2.30.1/moment.min.js"></script>

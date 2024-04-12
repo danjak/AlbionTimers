@@ -38,6 +38,7 @@ function addUtcCastles() {
     endTime.setUTCHours(10, 30, 0, 0);
 
     let set = false;
+
     castleTimers.forEach(time => {
         if (set) {
             return;
@@ -63,9 +64,13 @@ function addUtcCastles() {
         // Check if the current time is within the specified range
         if (now >= startTime && now <= endTime && time === '13:30') {
             document.getElementById('nextcastle').innerHTML = `${padZeroes(hoursRemaining)}h ${padZeroes(minutesRemaining)}m ${padZeroes(seconds)}s`;
+            document.getElementById('local-time').textContent = `${padZeroes(localDate.getHours())}:${padZeroes(localDate.getMinutes())}`;
+            document.getElementById('utc-time').textContent = `${padZeroes(localDate.getUTCHours())}:${padZeroes(localDate.getUTCMinutes())}`;
         }
         if (hoursRemaining <= 3) {
             document.getElementById('nextcastle').innerHTML = `${padZeroes(hoursRemaining)}h ${padZeroes(minutesRemaining)}m ${padZeroes(seconds)}s`;
+            document.getElementById('local-time').textContent = `${padZeroes(localDate.getHours())}:${padZeroes(localDate.getMinutes())}`;
+            document.getElementById('utc-time').textContent = `${padZeroes(localDate.getUTCHours())}:${padZeroes(localDate.getUTCMinutes())}`;
             set = true;
             return;
         }
