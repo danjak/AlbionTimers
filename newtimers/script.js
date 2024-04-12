@@ -47,7 +47,7 @@ const Events = Object.freeze({
     terri_fight_start: 'Terri Fight Starts',
     dead_zone: 'dead_zone', // ??
     down_time: 'Down time',
-    legendary_chest_open: 'Legenday chest open',
+    legendary_chest_open: 'Castle chest opens (Sat-Sun Legendary)',
     asia_maintainance: 'Maintainance',
     asia_patch_rollout: 'Patch Rollout'
 });
