@@ -18,13 +18,14 @@ document.getElementById('darkmodeswitch').addEventListener('click', () => {
 });
 
 const castleTimers = [
-    '01:30',
-    '04:30',
-    '07:30',
+
     '13:30',
     '16:30',
     '19:30',
-    '22:30'
+    '22:30',
+    '01:30',
+    '04:30',
+    '07:30'
 ];
 
 function padZeroes(timeInt) {
