@@ -79,13 +79,13 @@ function getTimers(region, elementId) {
             event = viewModel(eventDate, Events.asia_maintainance)
         }
         else if (hour == LegendaryCastle[region]) {
-            eventDate.setHours(eventDate.getHours() + 1);
+            eventDate.setHours(eventDate.getHours() );
             event = viewModel(eventDate, Events.legendary_chest_open);
         }
         else if (hour % 2 === 0) {
             event = viewModel(eventDate, Events.terri_fight_start);
         } else {
-            eventDate.setHours(eventDate.getHours() + 1);
+            eventDate.setHours(eventDate.getHours());
             event = viewModel(eventDate, Events.chest_open);
         }
 
