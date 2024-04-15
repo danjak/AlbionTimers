@@ -95,6 +95,7 @@ function copyDiscordTimer() {
 }
 
 function sortedTimers(region) {
+    sortedEvents = [];
     var localDate = new Date();
     var timers = Timers[region];
     // const utcTimersList = document.getElementById(elementId);
@@ -173,6 +174,9 @@ function timer() {
 
 
     const distance = eventDate - localDate;
+    if (distance < 0) {
+        sortedTimers(Regions.Americas);
+    }
     const seconds = Math.floor(distance / 1000) % 60;
     const minutesRemaining = Math.floor(distance / (1000 * 60)) % 60;
     const hoursRemaining = Math.floor(distance / (1000 * 60 * 60));
