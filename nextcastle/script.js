@@ -133,7 +133,7 @@ function sortedTimers(region) {
             event = viewModel(eventDate, Events.legendary_chest_open);
         }
         else if (hour % 2 === 0) {
-            event = viewModel(eventDate, Events.terri_fight_start);
+            return;
         } else {
             eventDate.setHours(eventDate.getHours());
             event = viewModel(eventDate, Events.chest_open);
