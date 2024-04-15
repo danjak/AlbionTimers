@@ -83,6 +83,17 @@ function sortAscending(a, b) {
     return a - b;
 }
 
+function copyDiscordTimer() {
+    var cbs = 'Next castle unlocks ' + '<t:' + parseInt((currentTimer.getTime() / 1000).toFixed(0)) + ':R>' + ' at ' + currentTimer.getHours() + ' UTC, <t:' + parseInt((currentTimer.getTime() / 1000).toFixed(0)) + ':t>';
+    navigator.clipboard.writeText(cbs)
+        .then(() => {
+            console.log("Text copied to clipboard successfully");
+        })
+        .catch((error) => {
+            console.error("Failed to copy text:", error);
+        });
+}
+
 function sortedTimers(region) {
     var localDate = new Date();
     var timers = Timers[region];
@@ -124,7 +135,7 @@ function sortedTimers(region) {
         else if (hour % 2 === 0) {
             event = viewModel(eventDate, Events.terri_fight_start);
         } else {
-            eventDate.setHours(eventDate.getHours() );
+            eventDate.setHours(eventDate.getHours());
             event = viewModel(eventDate, Events.chest_open);
         }
 
@@ -152,14 +163,16 @@ function sortedTimers(region) {
 var sortedEvents = [];
 sortedTimers(Regions.Americas);
 
+var currentTimer = null;
+
 function timer() {
     var localDate = new Date();
 
-    
+
     var eventDate = sortedEvents[0].date;
 
 
-    const distance =  eventDate - localDate;
+    const distance = eventDate - localDate;
     const seconds = Math.floor(distance / 1000) % 60;
     const minutesRemaining = Math.floor(distance / (1000 * 60)) % 60;
     const hoursRemaining = Math.floor(distance / (1000 * 60 * 60));
@@ -168,9 +181,12 @@ function timer() {
 
     // Check if the current time is within the specified range
     // if (now >= startTime && now <= endTime && time === '13:30') {
-        document.getElementById('nextcastle').innerHTML = `${padZeroes(hoursRemaining)}h ${padZeroes(minutesRemaining)}m ${padZeroes(seconds)}s`;
-        document.getElementById('local-time').textContent = `${padZeroes(eventDate.getHours())}:${padZeroes(eventDate.getMinutes())}`;
-        document.getElementById('utc-time').textContent = `${padZeroes(eventDate.getUTCHours())}:${padZeroes(eventDate.getUTCMinutes())}`;
+    document.getElementById('nextcastle').innerHTML = `${padZeroes(hoursRemaining)}h ${padZeroes(minutesRemaining)}m ${padZeroes(seconds)}s`;
+    document.getElementById('local-time').textContent = `${padZeroes(eventDate.getHours())}:${padZeroes(eventDate.getMinutes())}`;
+    document.getElementById('utc-time').textContent = `${padZeroes(eventDate.getUTCHours())}:${padZeroes(eventDate.getUTCMinutes())}`;
+    currentTimer = eventDate;
+
+
     // }
     // if (hoursRemaining <= 3) {
     //     document.getElementById('nextcastle').innerHTML = `${padZeroes(hoursRemaining)}h ${padZeroes(minutesRemaining)}m ${padZeroes(seconds)}s`;
