@@ -6,85 +6,269 @@ if (localStorage.getItem('darkmode') === 'true') {
 document.getElementById('darkmodeswitch').addEventListener('click', () => {
     if (document.documentElement.getAttribute('data-bs-theme') == 'dark') {
         localStorage.removeItem('darkmode');
-        document.documentElement.setAttribute('data-bs-theme', 'light');
+        document.documentElement.setAttribute('data-bs-theme', 'light')
         document.getElementById('darkmodeswitch').textContent = "Dark mode";
     }
     else {
         localStorage.setItem('darkmode', 'true');
-        document.documentElement.setAttribute('data-bs-theme', 'dark');
+        document.documentElement.setAttribute('data-bs-theme', 'dark')
         document.getElementById('darkmodeswitch').textContent = "Light mode";
-
     }
 });
 
-const castleTimers = [
 
-    '13:30',
-    '16:30',
-    '19:30',
-    '22:30',
-    '01:30',
-    '04:30',
-    '07:30'
-];
 
+// New timers: https://forum.albiononline.com/index.php/Thread/193427-Addressing-Albion-Europe-Feedback-and-Concerns-Update-March-26-13-40-UTC/#post1355007
+
+// Example : Americas 18 example:  Castle spawn 16:00, OP spawn 17:00, but open 18:00
+// Asia later, as their patch and downtimes are different.
+const LegendaryCastle = Object.freeze({
+    Americas: 23,
+    Europe: 19,
+    Asia: 15
+});
+
+const Downtime = '10:00';
+
+const Regions = Object.freeze({
+    Americas: 'Americas',
+    Europe: 'Europe',
+    Asia: 'Asia'
+});
+
+const Timers = Object.freeze({
+    Americas: ['23:00', '00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '10:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00'],
+    Europe: ['10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00'],
+    Asia: ['05:00', '06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '23:00']
+});
+
+const Events = Object.freeze({
+    chest_open: 'Castle chest opens',
+    terri_fight_start: 'Terri Fight Starts',
+    dead_zone: 'dead_zone', // ??
+    down_time: 'Down time',
+    legendary_chest_open: 'Legenday chest open',
+    asia_maintainance: 'Maintainance',
+    asia_patch_rollout: 'Patch Rollout'
+});
+
+// Object.keys(Regions).forEach(region => {
+//     getTimers(region);
+// });
 function padZeroes(timeInt) {
     return String(timeInt).padStart(2, '0');
 }
-function addUtcCastles() {
-    const startTime = new Date();
-    startTime.setUTCHours(7, 30, 0, 0);
 
-    const endTime = new Date();
-    endTime.setUTCHours(10, 30, 0, 0);
+function viewModel(eventDate, event) {
 
-    let set = false;
+    return {
+        date: eventDate,
+        localTime: `${padZeroes(eventDate.getHours())}:${padZeroes(eventDate.getMinutes())}`,
+        utcTime: `${padZeroes(eventDate.getUTCHours())}:${padZeroes(eventDate.getMinutes())}`,
+        event: event
+    }
 
-    castleTimers.forEach(time => {
-        if (set) {
+}
+
+function hourMinToEventDate(hours, minutes) {
+    const localDate = new Date();
+    if (localDate.getUTCHours() >= hours) {
+        localDate.setDate(localDate.getDate() + 1);
+    }
+    localDate.setUTCHours(Number(hours), Number(minutes), 0, 0);
+    return localDate;
+}
+
+function sortAscending(a, b) {
+    return a - b;
+}
+
+function copyDiscordTimer() {
+    var cbs = 'Next castle unlocks ' + '<t:' + parseInt((currentTimer.getTime() / 1000).toFixed(0)) + ':R>' + ' at ' + currentTimer.getHours() + ' UTC, <t:' + parseInt((currentTimer.getTime() / 1000).toFixed(0)) + ':t>';
+    navigator.clipboard.writeText(cbs)
+        .then(() => {
+            console.log("Text copied to clipboard successfully");
+        })
+        .catch((error) => {
+            console.error("Failed to copy text:", error);
+        });
+}
+
+function sortedTimers(region) {
+    var localDate = new Date();
+    var timers = Timers[region];
+    // const utcTimersList = document.getElementById(elementId);
+
+
+    var sortedDates = [];
+    timers.forEach(function (time) {
+        const [hour, minutes] = time.split(':');
+        sortedDates.push(hourMinToEventDate(hour, minutes));
+    });
+    sortedDates.sort((a, b) => {
+        return a - b;
+    });
+    console.log(sortedDates);
+
+    sortedDates.forEach(function (eventDate) {
+        // const [hour, minutes] = time.split(':');
+        // var eventDate = hourMinToEventDate(hour, minutes);
+        var hour = eventDate.getUTCHours();
+        var event = null;
+        console.log(hour);
+        if (hour === 10) {
             return;
         }
-        // LOCAL
-        const localTime = document.createElement('td');
-        const [hours, minutes] = time.split(':');
-        const localDate = new Date();
-        localDate.setUTCHours(Number(hours), Number(minutes), 0, 0);
-        localTime.textContent = `${padZeroes(localDate.getHours())}:${padZeroes(localDate.getMinutes())}`;
-
-        var now = new Date();
-        if (localDate < now) {
-            localDate.setDate(localDate.getDate() + 1);
+        //     if (region === Regions.Asia) {
+        //         event = viewModel(eventDate, Events.asia_patch_rollout)
+        //     } else {
+        //         event = viewModel(eventDate, Events.down_time)
+        //     }
+        // }
+        // else if (region === Regions.Asia && hour === '23') {
+        //     // event = viewModel(eventDate, Events.asia_maintainance)
+        // }
+        if (hour == LegendaryCastle[region]) {
+            eventDate.setHours(eventDate.getHours());
+            event = viewModel(eventDate, Events.legendary_chest_open);
         }
-        const distance = localDate - now;
-        const seconds = Math.floor(distance / 1000) % 60;
-        const minutesRemaining = Math.floor(distance / (1000 * 60)) % 60;
-        const hoursRemaining = Math.floor(distance / (1000 * 60 * 60));
-
-
-
-        // Check if the current time is within the specified range
-        if (now >= startTime && now <= endTime && time === '13:30') {
-            document.getElementById('nextcastle').innerHTML = `${padZeroes(hoursRemaining)}h ${padZeroes(minutesRemaining)}m ${padZeroes(seconds)}s`;
-            document.getElementById('local-time').textContent = `${padZeroes(localDate.getHours())}:${padZeroes(localDate.getMinutes())}`;
-            document.getElementById('utc-time').textContent = `${padZeroes(localDate.getUTCHours())}:${padZeroes(localDate.getUTCMinutes())}`;
-        }
-        if (hoursRemaining <= 3) {
-            document.getElementById('nextcastle').innerHTML = `${padZeroes(hoursRemaining)}h ${padZeroes(minutesRemaining)}m ${padZeroes(seconds)}s`;
-            document.getElementById('local-time').textContent = `${padZeroes(localDate.getHours())}:${padZeroes(localDate.getMinutes())}`;
-            document.getElementById('utc-time').textContent = `${padZeroes(localDate.getUTCHours())}:${padZeroes(localDate.getUTCMinutes())}`;
-            set = true;
-            return;
+        else if (hour % 2 === 0) {
+            event = viewModel(eventDate, Events.terri_fight_start);
+        } else {
+            eventDate.setHours(eventDate.getHours());
+            event = viewModel(eventDate, Events.chest_open);
         }
 
+
+        //     const row = document.createElement('tr');
+
+        //     const type = document.createElement('td');
+        //     type.textContent = event.event;
+        //     row.appendChild(type);
+        //     const localTime = document.createElement('td');
+        //     localTime.textContent = event.localTime;
+        //     row.appendChild(localTime);
+        //     const utcTime = document.createElement('td');
+        //     utcTime.textContent = event.utcTime;
+        //     row.appendChild(utcTime);
+        //     // const countDown = document.createElement('td');
+        //     // countDown.textContent = 0;
+        //     // row.appendChild(countDown);
+
+        //     utcTimersList.appendChild(row);
+        sortedEvents.push(event);
     });
 }
 
-function updateTime() {
-    addUtcCastles();
+var sortedEvents = [];
+sortedTimers(Regions.Americas);
+
+var currentTimer = null;
+
+function timer() {
+    var localDate = new Date();
+
+
+    var eventDate = sortedEvents[0].date;
+
+
+    const distance = eventDate - localDate;
+    const seconds = Math.floor(distance / 1000) % 60;
+    const minutesRemaining = Math.floor(distance / (1000 * 60)) % 60;
+    const hoursRemaining = Math.floor(distance / (1000 * 60 * 60));
+
+
+
+    // Check if the current time is within the specified range
+    // if (now >= startTime && now <= endTime && time === '13:30') {
+    document.getElementById('nextcastle').innerHTML = `${padZeroes(hoursRemaining)}h ${padZeroes(minutesRemaining)}m ${padZeroes(seconds)}s`;
+    document.getElementById('local-time').textContent = `${padZeroes(eventDate.getHours())}:${padZeroes(eventDate.getMinutes())}`;
+    document.getElementById('utc-time').textContent = `${padZeroes(eventDate.getUTCHours())}:${padZeroes(eventDate.getUTCMinutes())}`;
+    currentTimer = eventDate;
+
+
+    // }
+    // if (hoursRemaining <= 3) {
+    //     document.getElementById('nextcastle').innerHTML = `${padZeroes(hoursRemaining)}h ${padZeroes(minutesRemaining)}m ${padZeroes(seconds)}s`;
+    //     document.getElementById('local-time').textContent = `${padZeroes(localDate.getHours())}:${padZeroes(localDate.getMinutes())}`;
+    //     document.getElementById('utc-time').textContent = `${padZeroes(localDate.getUTCHours())}:${padZeroes(localDate.getUTCMinutes())}`;
+    //     set = true;
+    //     return;
+    // }
 }
+setInterval(timer, 1000);
+// document.getElementById('nextcastle').textContent = sortedEvents[0].localTime;
+timer();
 
-// Update the time every second
-setInterval(updateTime, 1000);
+// getTimers(Regions.Europe, 'utc-castle-europe-time');
+// getTimers(Regions.Asia, 'utc-castle-asia-time');
 
-// Initial call to set the time immediately
-updateTime();
+// getTimers(Region.Americas);
+
+
+
+//
+// const localDate = new Date();
+//
+// localTime.textContent = `${padZeroes(localDate.getHours())}:${padZeroes(localDate.getMinutes())}`;
+
+
+
+// After castle pop and one hour before castle pop.
+// const DeadZone = Object.freeze({
+//     Americas: { start: 6, end: 17 },
+//     Europe: { start: 0, end: 11 },
+// });
+
+// function isDeadZone(hours, region) {
+//     var deadzone = DeadZone[region];
+//     if (hours >= deadzone.start && hours < deadzone.end) {
+//         return true;
+//     }
+//     return false;
+// }
+
+// const messages = Object.freeze({
+//     'CHEST_OPEN': 'Chest opens in:',
+//     'TERRI_FIGHT_BEGIN': 'Terri fight begins in:'
+// });
+
+// const currentEvent = "";
+// const nextEvent = "";
+
+// function currentAndNextUpevent(region) {
+//     const now = new Date();
+
+//     const utcHours = now.getUTCHours();
+
+//     // Check deadzone
+//     if (isDeadZone(utcHours, region)) {
+//         currentEvent = DeadZone[region].start + ": Deadzone begin";
+//         nextEvent = DeadZone[region].end + 1 + ": Castle Chest Open"
+//         return;
+//     }
+
+//     // Handle otherwise
+//     var timers = Timers[region];
+//     timers.forEach(function (time) {
+//         var hour = Number(time.substring(0, 2));
+
+//         if (hour === utcHours + 1) {
+//             nextEvent =
+//         }
+
+
+//         if (time === Downtime) {
+//             console.log(time + ': Downtime');
+//         }
+//         else if (hour % 2 === 0) {
+//             console.log(time + ': Terri fight');
+//         }
+//         else if (time === LegendaryCastle[region]) {
+//             console.log(time + ': Legendary castle chest open');
+//         }
+//         else {
+//             console.log(time + ': 1 hour till Castle chest open');
+//         }
+//     });
+// }
