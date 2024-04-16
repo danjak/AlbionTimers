@@ -84,7 +84,7 @@ function sortAscending(a, b) {
 }
 
 function copyDiscordTimer() {
-    var cbs = 'Next castle unlocks ' + '<t:' + parseInt((currentTimer.getTime() / 1000).toFixed(0)) + ':R>' + ' at ' + currentTimer.getHours() + ' UTC, <t:' + parseInt((currentTimer.getTime() / 1000).toFixed(0)) + ':t>';
+    var cbs = 'Next castle unlocks ' + '<t:' + parseInt((currentTimer.getTime() / 1000).toFixed(0)) + ':R>' + ' at ' + currentTimer.getUTCHours() + ' UTC, <t:' + parseInt((currentTimer.getTime() / 1000).toFixed(0)) + ':t>';
     navigator.clipboard.writeText(cbs)
         .then(() => {
             console.log("Text copied to clipboard successfully");
